@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>频道神人天梯</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 24px; }
+        h2 { text-align: center; margin: 0 0 20px; color: #4caf50; letter-spacing: 2px; }
+        #ladder-container { max-width: 600px; margin: 0 auto; background: #1e1e1e; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        .ladder-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid #333; transition: background 0.2s; }
+        .ladder-item:last-child { border-bottom: none; }
+        .ladder-item:hover { background: #252525; }
+        .rank { width: 40px; font-weight: bold; text-align: center; font-size: 18px; color: #888; }
+        .rank.top { color: #ffd700; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; margin: 0 12px; object-fit: cover; border: 2px solid #4caf50; background: #333; }
+        .info { flex: 1; }
+        .name { font-size: 16px; font-weight: 500; color: #fff; }
+        .player-id { font-size: 12px; color: #777; margin-top: 4px; font-family: monospace; }
+        .empty-tip { text-align: center; padding: 30px; color: #666; }
+    </style>
+</head>
+<body>
+    <h2>频道神人天梯榜</h2>
+    <div id="ladder-container"></div>
+
+    <!-- 引入数据 -->
+    <script src="players.js"></script>
+    <script>
+        const container = document.getElementById('ladder-container');
+
+        function renderLadder(data) {
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = '<div class="empty-tip">暂无天梯数据</div>';
+                return;
+            }
+
+            const html = data.map((p, i) => {
+                const rank = i + 1;
+                return `
+                    <div class="ladder-item">
+                        <div class="rank ${rank <= 3 ? 'top' : ''}">${rank}</div>
+                        <img src="${p.avatar}" alt="${p.name}" class="avatar" onerror="this.style.display='none'">
+                        <div class="info">
+                            <div class="name">${p.name}</div>
+                            <div class="player-id">QQ: ${p.id}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        // 执行渲染
+        renderLadder(playerList);
+    </script>
+</body>
+</html>
