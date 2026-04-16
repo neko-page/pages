@@ -5,54 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>测评结果</title>
 <style>
-  :root{--p:#2563eb;--bg:#f1f5f9;--card:#fff;--txt:#1e293b;--orange:#ea580c;--gray:#cbd5e1;}
+  :root{--p:#2563eb;--bg:#f1f5f9;--card:#fff;--txt:#1e293b;--gray:#94a3b8;}
   body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
   
-  /* 布局容器 */
-  .wrap{max-width:1000px;margin:0 auto;padding:1rem;display:flex;flex-direction:column;gap:1rem;}
+  .wrap{max-width:1000px;margin:0 auto;padding:1rem;}
   
-  /* 顶部标题 */
-  .header{background:var(--card);padding:1.5rem;border-radius:12px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
-  .header h1{margin:0 0 0.5rem;font-size:1.5rem;color:var(--p);}
+  .header{background:var(--card);padding:1.5rem;border-radius:12px;text-align:center;margin-bottom:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
+  .header h1{margin:0;font-size:1.5rem;color:var(--p);}
   
-  /* 主体网格：左侧图表 + 右侧详情 */
   .main-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
   
-  /* 左侧面板 (图表 + 控制) */
-  .left-panel{background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;}
+  /* 左侧面板 */
+  .left-panel{background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
   
-  /* 扇形统计图容器 */
-  .chart-box{position:relative;width:180px;height:180px;margin-bottom:1.5rem;}
-  #pieChart{width:100%;height:100%;border-radius:50%;transition:transform 0.3s;}
-  /*  Tooltip 提示层 */
-  #chartTooltip{position:absolute;top:-40px;left:50%;transform:translateX(-50%);background:#334155;color:#fff;padding:4px 10px;border-radius:4px;font-size:0.8rem;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none;}
-  #chartTooltip.show{opacity:1;}
+  /* 类型结果显示区 */
+  .type-display{text-align:center;margin-bottom:1.5rem;padding:1.5rem;background:linear-gradient(135deg,#eff6ff 0%,#fff 100%);border-radius:12px;border:2px solid var(--p);}
+  .type-label{font-size:0.9rem;color:#64748b;margin-bottom:0.5rem;}
+  .type-name{font-size:2rem;font-weight:bold;color:var(--p);margin:0.5rem 0;}
+  .type-score{font-size:1rem;color:#475569;margin-top:0.5rem;}
   
-  /* 条形统计图区域 */
-  .bars-area{width:100%;display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1rem;}
-  .bar-item{display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:opacity 0.2s;}
-  .bar-item:hover{opacity:0.8;}
-  .bar-label{display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;}
-  .bar-track{height:24px;background:#f1f5f9;border-radius:6px;overflow:hidden;position:relative;}
-  .bar-fill{height:100%;background:var(--p);border-radius:6px;width:0%;transition:width 1s cubic-bezier(0.4, 0, 0.2, 1);}
+  /* 条形图 */
+  .bars-area{margin-bottom:1.5rem;}
+  .bar-item{margin-bottom:12px;cursor:pointer;transition:transform 0.2s;}
+  .bar-item:hover{transform:translateX(4px);}
+  .bar-label{display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.9rem;font-weight:600;}
+  .bar-track{height:28px;background:#e2e8f0;border-radius:6px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--p);border-radius:6px;width:0%;transition:width 1s ease;}
   .bar-fill.gray{background:var(--gray);}
   
-  /* 显示气质按钮 */
-  .result-btn{width:100%;padding:0.8rem;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:bold;margin-top:0.5rem;}
-  .result-btn:hover{background:#059669;}
+  /* 测评结论文本区 */
+  .result-box{background:#f8fafc;border-left:4px solid var(--p);padding:1rem;border-radius:6px;}
+  .result-title{font-weight:bold;color:var(--p);margin-bottom:0.5rem;font-size:1rem;}
+  .result-text{color:#475569;line-height:1.6;font-size:0.95rem;}
   
-  /* 右侧详情面板 */
-  .right-panel{background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);border:2px solid var(--p);min-height:300px;display:flex;flex-direction:column;}
-  .detail-title{font-size:1.4rem;font-weight:bold;color:var(--p);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
-  .detail-score{font-size:0.9rem;color:#64748b;background:#f1f5f9;padding:2px 8px;border-radius:4px;}
-  .detail-text{font-size:1rem;line-height:1.7;color:#334155;flex:1;}
+  /* 右侧详情 */
+  .right-panel{background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);border-left:4px solid var(--p);}
+  .detail-name{font-size:1.5rem;font-weight:bold;color:var(--p);margin-bottom:0.5rem;}
+  .detail-score{color:#64748b;font-size:0.9rem;margin-bottom:1rem;}
+  .detail-text{line-height:1.8;color:#475569;}
   
-  .btn-back{display:block;margin-top:1rem;padding:0.8rem;background:#fff;border:1px solid var(--p);color:var(--p);border-radius:8px;text-align:center;text-decoration:none;font-weight:500;}
+  .btn-back{display:block;margin-top:1rem;padding:0.8rem;background:#fff;border:1px solid var(--p);color:var(--p);border-radius:8px;text-align:center;text-decoration:none;}
 
-  /* 桌面端/横屏布局适配 */
   @media (min-width: 768px) {
-    .main-grid{grid-template-columns:350px 1fr;}
-    .wrap{flex-direction:column;align-items:center;}
+    .main-grid{grid-template-columns:380px 1fr;}
   }
 </style>
 </head>
@@ -64,42 +59,47 @@
   </div>
 
   <div class="main-grid">
-    <!-- 左侧：图表与控制 -->
+    <!-- 左侧 -->
     <div class="left-panel">
-      <!-- 扇形图 -->
-      <div class="chart-box">
-        <div id="chartTooltip"></div>
-        <div id="pieChart"></div>
+      <!-- 类型结果显示区 -->
+      <div class="type-display">
+        <div class="type-label">您的气质类型</div>
+        <div class="type-name" id="mainType">计算中...</div>
+        <div class="type-score" id="typeScore"></div>
       </div>
 
       <!-- 条形图 -->
       <div class="bars-area">
-        <div class="bar-item" onclick="selectType('A')">
-          <div class="bar-label"><span>胆汁质 (A)</span><span id="lblA">0</span></div>
+        <div class="bar-item" onclick="showDetail('A')">
+          <div class="bar-label"><span>胆汁质 (A)</span><span id="valA">0</span></div>
           <div class="bar-track"><div class="bar-fill" id="barA"></div></div>
         </div>
-        <div class="bar-item" onclick="selectType('B')">
-          <div class="bar-label"><span>多血质 (B)</span><span id="lblB">0</span></div>
+        <div class="bar-item" onclick="showDetail('B')">
+          <div class="bar-label"><span>多血质 (B)</span><span id="valB">0</span></div>
           <div class="bar-track"><div class="bar-fill" id="barB"></div></div>
         </div>
-        <div class="bar-item" onclick="selectType('C')">
-          <div class="bar-label"><span>粘液质 (C)</span><span id="lblC">0</span></div>
+        <div class="bar-item" onclick="showDetail('C')">
+          <div class="bar-label"><span>粘液质 (C)</span><span id="valC">0</span></div>
           <div class="bar-track"><div class="bar-fill" id="barC"></div></div>
         </div>
-        <div class="bar-item" onclick="selectType('D')">
-          <div class="bar-label"><span>抑郁质 (D)</span><span id="lblD">0</span></div>
+        <div class="bar-item" onclick="showDetail('D')">
+          <div class="bar-label"><span>抑郁质 (D)</span><span id="valD">0</span></div>
           <div class="bar-track"><div class="bar-fill" id="barD"></div></div>
         </div>
       </div>
 
-      <!-- 结果按钮 -->
-      <button class="result-btn" onclick="showFinalResult()">显示气质判定结果</button>
+      <!-- 测评结论文本区 -->
+      <div class="result-box">
+        <div class="result-title">详细分析</div>
+        <div class="result-text" id="analysisText">加载中...</div>
+      </div>
     </div>
 
-    <!-- 右侧：详细介绍 -->
-    <div class="right-panel" id="detailPanel">
-      <div class="detail-title" id="dtTitle">等待选择...</div>
-      <div class="detail-text" id="dtText">请点击左侧的条形图或扇形图，查看对应的具体气质介绍。</div>
+    <!-- 右侧详情 -->
+    <div class="right-panel">
+      <div class="detail-name" id="dtName">气质类型</div>
+      <div class="detail-score" id="dtScore">分数信息</div>
+      <div class="detail-text" id="dtText">请点击左侧条形图查看详细气质介绍</div>
     </div>
   </div>
 
@@ -114,7 +114,7 @@ const descs = {
   D: {name:'抑郁质', color:'#f59e0b', text:'情绪体验深刻，行动迟缓，具有较高的感受性，善于觉察他人不易注意的细节，富有幻想，胆小孤僻，具有内倾性。情绪体验深刻，不易外露；对事物有较高的敏感性，观察事物细致；行动缓慢、多愁善感，易于消沉。'}
 };
 
-const BASELINE = 30; // 基础分
+const BASELINE = 30;
 const params = new URLSearchParams(window.location.search);
 const scores = {
   A: parseInt(params.get('A')||0),
@@ -123,90 +123,82 @@ const scores = {
   D: parseInt(params.get('D')||0)
 };
 
-// 初始化
 window.onload = () => {
   renderBars();
-  renderChart();
-  // 默认显示最高分的内容
+  calculateAndDisplay();
+  // 默认显示最高分
   let maxK = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-  selectType(maxK);
+  showDetail(maxK);
 };
 
-// 渲染条形图
 function renderBars(){
   for(let k in scores){
     const s = scores[k];
-    document.getElementById(`lbl${k}`).textContent = s;
+    document.getElementById(`val${k}`).textContent = s;
     const bar = document.getElementById(`bar${k}`);
-    // 宽度百分比 (满分 60)
     setTimeout(()=>{
       bar.style.width = `${(s/60)*100}%`;
-      if(s < BASELINE) bar.classList.add('gray'); // 负分灰色
-      else bar.classList.remove('gray');
+      if(s < BASELINE) bar.classList.add('gray');
     }, 100);
   }
 }
 
-// 渲染扇形图 (CSS Conic Gradient)
-function renderChart(){
+function calculateAndDisplay(){
+  const arr = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const [first, second, third, fourth] = arr;
   const total = scores.A + scores.B + scores.C + scores.D;
-  if(total === 0) return;
   
-  let gradStr = [];
-  let acc = 0;
+  let mainType = '';
+  let subText = '';
+  let analysis = '';
   
-  // 顺序 A->B->C->D
-  ['A','B','C','D'].forEach(k => {
-    const s = scores[k];
-    const pct = (s / total) * 100;
-    const end = acc + pct;
-    const color = s < BASELINE ? '#cbd5e1' : descs[k].color; // 关键逻辑：低于 30 分变灰
-    gradStr.push(`${color} ${acc}% ${end}%`);
-    acc = end;
-  });
+  // 判定逻辑
+  if(first[1] - second[1] >= 4){
+    // 单一气质
+    let type = first[1]>20?'典型':(first[1]>=10?'一般':'倾向');
+    mainType = descs[first[0]].name;
+    subText = `${type}型 | 得分 ${first[1]}分`;
+    
+    const pct = total>0 ? Math.round((first[1]/total)*100) : 0;
+    analysis = `您的主导气质为${descs[first[0]].name}，占比${pct}%。该类型得分显著高于其他类型（高出${first[1]-second[1]}分），表现出明显的${descs[first[0]].name}特征。`;
+  } else if(first[1] - second[1] < 3 && second[1] - third[1] >= 4){
+    // 两种混合
+    mainType = `${descs[first[0]].name}+${descs[second[0]].name}`;
+    subText = '混合型';
+    
+    const pct1 = total>0 ? Math.round((first[1]/total)*100) : 0;
+    const pct2 = total>0 ? Math.round((second[1]/total)*100) : 0;
+    analysis = `您属于${descs[first[0]].name}与${descs[second[0]].name}的混合型气质（分别占比${pct1}%和${pct2}%）。两种气质得分接近（相差${Math.abs(first[1]-second[1])}分），您兼具两者的特点。`;
+  } else if(first[1] - third[1] < 3 && third[1] - fourth[1] >= 4){
+    // 三种混合
+    mainType = `${descs[first[0]].name}+${descs[second[0]].name}+${descs[third[0]].name}`;
+    subText = '三种气质混合';
+    analysis = `您呈现三种气质混合特征：${descs[first[0]].name}、${descs[second[0]].name}和${descs[third[0]].name}。这三种气质得分较为接近。`;
+  } else if(first[1] - fourth[1] < 3){
+    // 四种混合
+    mainType = '平衡型';
+    subText = '四种气质均衡';
+    analysis = `您的四种气质得分较为均衡（最高${first[1]}分，最低${fourth[1]}分），差异不超过3分。这表明您的性格特征较为全面，能够适应不同情境。`;
+  } else {
+    mainType = descs[first[0]].name;
+    subText = '主导型';
+    analysis = `您的气质类型以${descs[first[0]].name}为主，同时带有一定的${descs[second[0]].name}特征。`;
+  }
   
-  document.getElementById('pieChart').style.background = `conic-gradient(${gradStr.join(', ')})`;
+  document.getElementById('mainType').textContent = mainType;
+  document.getElementById('typeScore').textContent = subText;
+  document.getElementById('analysisText').textContent = analysis;
 }
 
-// 交互：点击选择
-function selectType(k){
+function showDetail(k){
   const s = scores[k];
   const total = scores.A + scores.B + scores.C + scores.D;
   const pct = total>0 ? Math.round((s/total)*100) : 0;
   const diff = s - BASELINE;
   
-  // 更新右侧详情
-  document.getElementById('dtTitle').innerHTML = `${descs[k].name} <span class="detail-score">原始分 ${s} | 占比 ${pct}%</span>`;
+  document.getElementById('dtName').textContent = descs[k].name;
+  document.getElementById('dtScore').textContent = `原始分：${s}分 | 占比：${pct}% | 相对基准：${diff>=0?'+':''}${diff}分`;
   document.getElementById('dtText').textContent = descs[k].text;
-  
-  // 显示 Tooltip (在图表上方)
-  const tooltip = document.getElementById('chartTooltip');
-  tooltip.textContent = `${descs[k].name}: ${pct}% (${diff>=0?'+':''}${diff})`;
-  tooltip.classList.add('show');
-  setTimeout(()=> tooltip.classList.remove('show'), 2500);
-  
-  // 高亮条形图
-  document.querySelectorAll('.bar-fill').forEach(el=> el.style.opacity='0.5');
-  document.getElementById(`bar${k}`).style.opacity='1';
-}
-
-// 最终判定逻辑 (基于 0 分制)
-function showFinalResult(){
-  const arr = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  const [s1, s2] = arr;
-  let resText = '';
-  
-  if(s1[1] - s2[1] >= 4){
-    let type = s1[1]>20?'典型':(s1[1]>=10?'一般':'倾向');
-    resText = `判定结果：您是 ${descs[s1[0]].name} (${type})。您的${descs[s1[0]].name}特征最为显著，得分远超其他类型。`;
-  } else if (s1[1] - s2[1] < 3){
-    resText = `判定结果：您是 ${descs[s1[0]].name} + ${descs[s2[0]].name} 混合型。您的两项指标非常接近，呈现出混合气质特征。`;
-  } else {
-    resText = `判定结果：您是 ${descs[s1[0]].name} 主导。`;
-  }
-  
-  document.getElementById('dtTitle').textContent = "测评结论";
-  document.getElementById('dtText').innerHTML = `<strong>${resText}</strong><br><br>以上结果仅供参考，人的性格是复杂多变的，会随环境改变。`;
 }
 </script>
 </body>
