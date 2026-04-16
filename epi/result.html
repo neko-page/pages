@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>测评结果</title>
 <style>
-  :root{--p:#2563eb;--bg:#f1f5f9;--card:#fff;--txt:#1e293b;--gray:#94a3b8;}
+  :root{--p:#2563eb;--bg:#f1f5f9;--card:#fff;--txt:#1e293b;--orange:#ea580c;}
   body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
   
   .wrap{max-width:1000px;margin:0 auto;padding:1rem;}
@@ -21,22 +21,28 @@
   /* 类型结果显示区 */
   .type-display{text-align:center;margin-bottom:1.5rem;padding:1.5rem;background:linear-gradient(135deg,#eff6ff 0%,#fff 100%);border-radius:12px;border:2px solid var(--p);}
   .type-label{font-size:0.9rem;color:#64748b;margin-bottom:0.5rem;}
-  .type-name{font-size:2rem;font-weight:bold;color:var(--p);margin:0.5rem 0;}
-  .type-score{font-size:1rem;color:#475569;margin-top:0.5rem;}
+  .type-name{font-size:1.8rem;font-weight:bold;color:var(--p);margin:0.5rem 0;}
+  .type-score{font-size:0.95rem;color:#475569;margin-top:0.5rem;}
   
   /* 条形图 */
   .bars-area{margin-bottom:1.5rem;}
-  .bar-item{margin-bottom:12px;cursor:pointer;transition:transform 0.2s;}
+  .bar-item{margin-bottom:14px;cursor:pointer;transition:transform 0.2s;}
   .bar-item:hover{transform:translateX(4px);}
   .bar-label{display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.9rem;font-weight:600;}
-  .bar-track{height:28px;background:#e2e8f0;border-radius:6px;overflow:hidden;}
-  .bar-fill{height:100%;background:var(--p);border-radius:6px;width:0%;transition:width 1s ease;}
-  .bar-fill.gray{background:var(--gray);}
+  .bar-label span.rel{color:#64748b;font-weight:normal;font-size:0.85rem;}
+  .bar-track{height:28px;background:#e2e8f0;border-radius:6px;overflow:hidden;position:relative;}
+  .bar-fill{height:100%;border-radius:6px;width:0%;transition:width 1s ease;position:absolute;left:50%;transform:translateX(-50%);}
+  .bar-fill.pos{background:var(--p);}
+  .bar-fill.neg{background:var(--orange);}
+  .bar-center{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#fff;z-index:1;}
   
-  /* 测评结论文本区 */
-  .result-box{background:#f8fafc;border-left:4px solid var(--p);padding:1rem;border-radius:6px;}
-  .result-title{font-weight:bold;color:var(--p);margin-bottom:0.5rem;font-size:1rem;}
-  .result-text{color:#475569;line-height:1.6;font-size:0.95rem;}
+  /* 测评结果描述区 */
+  .result-box{background:#f8fafc;border-radius:8px;padding:1rem;}
+  .result-title{font-weight:bold;color:var(--p);margin:0 0 0.8rem;font-size:1rem;border-bottom:1px solid #e2e8f0;padding-bottom:0.5rem;}
+  .desc-list{display:flex;flex-direction:column;gap:0.8rem;}
+  .desc-item{background:#fff;padding:0.8rem 1rem;border-radius:6px;border-left:3px solid var(--p);}
+  .desc-item .name{font-weight:600;color:#0f172a;margin-bottom:0.3rem;font-size:0.95rem;}
+  .desc-item .text{font-size:0.9rem;color:#475569;line-height:1.6;margin:0;}
   
   /* 右侧详情 */
   .right-panel{background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);border-left:4px solid var(--p);}
@@ -68,30 +74,30 @@
         <div class="type-score" id="typeScore"></div>
       </div>
 
-      <!-- 条形图 -->
+      <!-- 条形图（相对分） -->
       <div class="bars-area">
         <div class="bar-item" onclick="showDetail('A')">
-          <div class="bar-label"><span>胆汁质 (A)</span><span id="valA">0</span></div>
-          <div class="bar-track"><div class="bar-fill" id="barA"></div></div>
+          <div class="bar-label"><span>胆汁质 (A)</span><span class="rel" id="lblA">0</span></div>
+          <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barA"></div></div>
         </div>
         <div class="bar-item" onclick="showDetail('B')">
-          <div class="bar-label"><span>多血质 (B)</span><span id="valB">0</span></div>
-          <div class="bar-track"><div class="bar-fill" id="barB"></div></div>
+          <div class="bar-label"><span>多血质 (B)</span><span class="rel" id="lblB">0</span></div>
+          <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barB"></div></div>
         </div>
         <div class="bar-item" onclick="showDetail('C')">
-          <div class="bar-label"><span>粘液质 (C)</span><span id="valC">0</span></div>
-          <div class="bar-track"><div class="bar-fill" id="barC"></div></div>
+          <div class="bar-label"><span>粘液质 (C)</span><span class="rel" id="lblC">0</span></div>
+          <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barC"></div></div>
         </div>
         <div class="bar-item" onclick="showDetail('D')">
-          <div class="bar-label"><span>抑郁质 (D)</span><span id="valD">0</span></div>
-          <div class="bar-track"><div class="bar-fill" id="barD"></div></div>
+          <div class="bar-label"><span>抑郁质 (D)</span><span class="rel" id="lblD">0</span></div>
+          <div class="bar-track"><div class="bar-center"></div><div class="bar-fill" id="barD"></div></div>
         </div>
       </div>
 
-      <!-- 测评结论文本区 -->
+      <!-- 测评结果描述区 -->
       <div class="result-box">
-        <div class="result-title">详细分析</div>
-        <div class="result-text" id="analysisText">加载中...</div>
+        <div class="result-title">气质特征描述</div>
+        <div class="desc-list" id="descList"></div>
       </div>
     </div>
 
@@ -108,10 +114,10 @@
 
 <script>
 const descs = {
-  A: {name:'胆汁质', color:'#2563eb', text:'直率热情，精力旺盛，脾气急躁，情绪兴奋性高，容易冲动，反应迅速，心境变化剧烈，具有外倾性。情感和情绪发生迅速，爆发力好，但消失也快；智力活动灵敏有力，但理解问题容易粗枝大叶；意志力坚强，不怕挫折，但容易冲动。'},
-  B: {name:'多血质', color:'#8b5cf6', text:'活泼好动，反应灵敏，乐于交往，注意力易转移，兴趣和情绪多变，缺乏持久力，具有外倾性。情感和情绪发生迅速，表露于外，极易变化，灵活而敏捷；工作适应力强，但容易见异思迁。'},
-  C: {name:'粘液质', color:'#10b981', text:'安静、稳重、沉着，反应缓慢，沉默寡言，三思而后行，情绪不易外露，注意力稳定而较难转移，善于忍耐，偏内倾型。情绪比较稳定，兴奋性低，变化缓慢，内向、喜欢沉思；思维和言行稳定而迟缓，冷静而踏实。'},
-  D: {name:'抑郁质', color:'#f59e0b', text:'情绪体验深刻，行动迟缓，具有较高的感受性，善于觉察他人不易注意的细节，富有幻想，胆小孤僻，具有内倾性。情绪体验深刻，不易外露；对事物有较高的敏感性，观察事物细致；行动缓慢、多愁善感，易于消沉。'}
+  A: {name:'胆汁质', text:'直率热情，精力旺盛，脾气急躁，情绪兴奋性高，容易冲动，反应迅速，心境变化剧烈，具有外倾性。情感和情绪发生迅速，爆发力好，但消失也快；智力活动灵敏有力，但理解问题容易粗枝大叶；意志力坚强，不怕挫折，但容易冲动。'},
+  B: {name:'多血质', text:'活泼好动，反应灵敏，乐于交往，注意力易转移，兴趣和情绪多变，缺乏持久力，具有外倾性。情感和情绪发生迅速，表露于外，极易变化，灵活而敏捷；工作适应力强，但容易见异思迁。'},
+  C: {name:'粘液质', text:'安静、稳重、沉着，反应缓慢，沉默寡言，三思而后行，情绪不易外露，注意力稳定而较难转移，善于忍耐，偏内倾型。情绪比较稳定，兴奋性低，变化缓慢，内向、喜欢沉思；思维和言行稳定而迟缓，冷静而踏实。'},
+  D: {name:'抑郁质', text:'情绪体验深刻，行动迟缓，具有较高的感受性，善于觉察他人不易注意的细节，富有幻想，胆小孤僻，具有内倾性。情绪体验深刻，不易外露；对事物有较高的敏感性，观察事物细致；行动缓慢、多愁善感，易于消沉。'}
 };
 
 const BASELINE = 30;
@@ -123,22 +129,36 @@ const scores = {
   D: parseInt(params.get('D')||0)
 };
 
+// 计算相对分
+const relScores = {
+  A: scores.A - BASELINE,
+  B: scores.B - BASELINE,
+  C: scores.C - BASELINE,
+  D: scores.D - BASELINE
+};
+
 window.onload = () => {
   renderBars();
   calculateAndDisplay();
-  // 默认显示最高分
+  // 默认显示最高原始分
   let maxK = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
   showDetail(maxK);
 };
 
 function renderBars(){
-  for(let k in scores){
-    const s = scores[k];
-    document.getElementById(`val${k}`).textContent = s;
+  for(let k in relScores){
+    const rel = relScores[k];
+    const abs = Math.abs(rel);
+    const sign = rel >= 0 ? '+' : '';
+    
+    // 标签：原始分 (相对分)
+    document.getElementById(`lbl${k}`).textContent = `${scores[k]} (${sign}${rel})`;
+    
     const bar = document.getElementById(`bar${k}`);
+    // 长度按绝对值比例（最大偏差30分对应100%宽度）
     setTimeout(()=>{
-      bar.style.width = `${(s/60)*100}%`;
-      if(s < BASELINE) bar.classList.add('gray');
+      bar.style.width = `${(abs/30)*100}%`;
+      bar.className = `bar-fill ${rel>=0?'pos':'neg'}`;
     }, 100);
   }
 }
@@ -146,58 +166,66 @@ function renderBars(){
 function calculateAndDisplay(){
   const arr = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
   const [first, second, third, fourth] = arr;
-  const total = scores.A + scores.B + scores.C + scores.D;
   
   let mainType = '';
   let subText = '';
-  let analysis = '';
+  let validKeys = []; // 符合判定标准的气质类型
   
-  // 判定逻辑
+  // 判定逻辑（基于原始分）
   if(first[1] - second[1] >= 4){
     // 单一气质
     let type = first[1]>20?'典型':(first[1]>=10?'一般':'倾向');
     mainType = descs[first[0]].name;
-    subText = `${type}型 | 得分 ${first[1]}分`;
-    
-    const pct = total>0 ? Math.round((first[1]/total)*100) : 0;
-    analysis = `您的主导气质为${descs[first[0]].name}，占比${pct}%。该类型得分显著高于其他类型（高出${first[1]-second[1]}分），表现出明显的${descs[first[0]].name}特征。`;
+    subText = `${type}型 | 原始分 ${first[1]}分`;
+    validKeys = [first[0]];
   } else if(first[1] - second[1] < 3 && second[1] - third[1] >= 4){
     // 两种混合
     mainType = `${descs[first[0]].name}+${descs[second[0]].name}`;
     subText = '混合型';
-    
-    const pct1 = total>0 ? Math.round((first[1]/total)*100) : 0;
-    const pct2 = total>0 ? Math.round((second[1]/total)*100) : 0;
-    analysis = `您属于${descs[first[0]].name}与${descs[second[0]].name}的混合型气质（分别占比${pct1}%和${pct2}%）。两种气质得分接近（相差${Math.abs(first[1]-second[1])}分），您兼具两者的特点。`;
+    validKeys = [first[0], second[0]];
   } else if(first[1] - third[1] < 3 && third[1] - fourth[1] >= 4){
     // 三种混合
-    mainType = `${descs[first[0]].name}+${descs[second[0]].name}+${descs[third[0]].name}`;
+    mainType = '多气质混合';
     subText = '三种气质混合';
-    analysis = `您呈现三种气质混合特征：${descs[first[0]].name}、${descs[second[0]].name}和${descs[third[0]].name}。这三种气质得分较为接近。`;
+    validKeys = [first[0], second[0], third[0]];
   } else if(first[1] - fourth[1] < 3){
-    // 四种混合
+    // 四种混合/均衡
     mainType = '平衡型';
     subText = '四种气质均衡';
-    analysis = `您的四种气质得分较为均衡（最高${first[1]}分，最低${fourth[1]}分），差异不超过3分。这表明您的性格特征较为全面，能够适应不同情境。`;
+    validKeys = ['A','B','C','D'];
   } else {
     mainType = descs[first[0]].name;
     subText = '主导型';
-    analysis = `您的气质类型以${descs[first[0]].name}为主，同时带有一定的${descs[second[0]].name}特征。`;
+    validKeys = [first[0], second[0]];
   }
   
   document.getElementById('mainType').textContent = mainType;
   document.getElementById('typeScore').textContent = subText;
-  document.getElementById('analysisText').textContent = analysis;
+  
+  // 生成描述列表（显示所有符合的类型）
+  let html = '';
+  validKeys.forEach(k=>{
+    const rel = relScores[k];
+    const sign = rel>=0?'+':'';
+    html += `
+      <div class="desc-item">
+        <div class="name">${descs[k].name} · 原始分 ${scores[k]} (相对 ${sign}${rel})</div>
+        <p class="text">${descs[k].text}</p>
+      </div>
+    `;
+  });
+  document.getElementById('descList').innerHTML = html;
 }
 
 function showDetail(k){
   const s = scores[k];
+  const rel = relScores[k];
   const total = scores.A + scores.B + scores.C + scores.D;
   const pct = total>0 ? Math.round((s/total)*100) : 0;
-  const diff = s - BASELINE;
+  const sign = rel>=0?'+':'';
   
   document.getElementById('dtName').textContent = descs[k].name;
-  document.getElementById('dtScore').textContent = `原始分：${s}分 | 占比：${pct}% | 相对基准：${diff>=0?'+':''}${diff}分`;
+  document.getElementById('dtScore').textContent = `原始分：${s} | 相对分：${sign}${rel} | 占比：${pct}%`;
   document.getElementById('dtText').textContent = descs[k].text;
 }
 </script>
